@@ -11,7 +11,7 @@ current_time <- gsub(" ", "_", current_time)
 current_time <- gsub(":", "-", current_time)
 
 ## prepare the meta table
-meta_data <- read.csv("all_cancer_type_mutation_group_age_included_20230524_include_somatic_tmb_and_ISAC046_tumor_levels_2023-06-30_18-11-58.csv")
+meta_data <- read.csv("../data/all_cancer_type_mutation_group_age_included_20230524_include_somatic_tmb_and_ISAC046_tumor_levels_2023-06-30_18-11-58.csv")
 
 ## read the maf files
 folder_path <- "~/maf_vep_pass_subset/"
