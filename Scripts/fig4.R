@@ -11,7 +11,7 @@ current_time <- gsub(" ", "_", current_time)
 current_time <- gsub(":", "-", current_time)
 
 ## prepare the meta table
-meta_data <- read.csv("~/OneDrive - Karolinska Institutet/personal_files/PhD/Project/ISAC/results/table/all_cancer_type_mutation_group_age_included_20230524_include_somatic_tmb_and_ISAC046_tumor_levels_2023-06-30_18-11-58.csv")## 缺少isac049信息
+meta_data <- read.csv("all_cancer_type_mutation_group_age_included_20230524_include_somatic_tmb_and_ISAC046_tumor_levels_2023-06-30_18-11-58.csv")
 
 ## read the maf files
 folder_path <- "~/maf_vep_pass_subset/"
@@ -29,7 +29,6 @@ need_delete <- c("Intron","5'UTR", "3'UTR","5'Flank", "3'Flank", "IGR", "Silent"
 
 ## read filtered maf files
 maf_m <- lapply(paste("~/maf_vep_pass_subset/",list.files("~/maf_vep_pass_subset/"), sep = ""), read.maf, clinicalData=meta_data, verbose = FALSE, vc_nonSyn = classification)
-## 本来计划用上面的classification作为vc_nonSyn,后来从https://github.com/PoisonAlien/maftools/issues/612 这里看到，作者对tcga用的也是这个，所以默认即可。
 maf_merge <- merge_mafs(maf_m, vc_nonSyn = classification)
 maf_merge <- subsetMaf(maf_merge, query = "!Variant_Classification %in% need_delete")  ## 这个不仅需要，而是是最严的，IGR和Intro也没有
 maf_merge <- subsetMaf(maf_merge, query = "n_depth > 7")
@@ -60,4 +59,4 @@ ggplot(tmb_merge, mapping = aes(x=tumor_level2, y=total_perMB)) + geom_boxplot(f
   labs(color = NULL) +
   scale_y_log10()
 
-ggsave(paste("~/OneDrive - Karolinska Institutet/personal_files/PhD/Project/ISAC/results/figure/all_samples_tmb_exom_new_with_realiable_methods_", current_time, ".pdf", sep = ""),height = 8, width = 7.2)
+ggsave("exom_tmb_distribution_20231018.pdf",height = 8, width = 7.2)
