@@ -14,7 +14,10 @@ current_time <- gsub(":", "-", current_time)
 meta_data <- read.csv("all_cancer_type_mutation_group_age_included_20230524_include_somatic_tmb_and_ISAC046_tumor_levels_2023-06-30_18-11-58.csv")
 
 ## read the maf files
-folder_path <- "~/maf_vep_pass_subset/"
+
+folder_path <- "~/maf_vep_pass_subset/" ## files in this folder include vcf files got from sarek pipelines, then tranform to maf by vcf2maf tools and filtered by PASS
+                                        ## the filtered and merged maf files can be found in data folder. Code from line 17 to line 35 just to show the filter process
+                                        ## the code for the plot can run from line 38
 file_names <- list.files(folder_path)
 merged_data <- data.frame()
 for (file_name in file_names) {
@@ -32,11 +35,13 @@ maf_m <- lapply(paste("~/maf_vep_pass_subset/",list.files("~/maf_vep_pass_subset
 maf_merge <- merge_mafs(maf_m, vc_nonSyn = classification)
 maf_merge <- subsetMaf(maf_merge, query = "!Variant_Classification %in% need_delete") 
 maf_merge <- subsetMaf(maf_merge, query = "n_depth > 7")
-source("WGS/test2.R")
+write.mafSummary(maf_merge, basename = "isac1_filtered_maf")
+
+maf_merge <- read.maf("../Data/isac1_filtered_maf_maftools.maf", verbose = F)
 
 ##---------- Fig 4a
-isac.mutload = tcgaCompare_test(maf = maf_merge, cohortName = 'ISAC', logscale = TRUE,primarySite = F, capture_size = 35.8, rm_zero = F) 
-
+isac.mutload = tcgaCompare(maf = new_maf, cohortName = 'ISAC', logscale = TRUE,primarySite = F, capture_size = 35.8, rm_zero = FALSE, medianCol = "#7F3F98",bg_col = c("#EDF8B1", "white"),cohortFontSize = 1, axisFontSize = 1
+)
 
 
 ##---------- Fig 4b
