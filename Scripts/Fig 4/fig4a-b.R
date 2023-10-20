@@ -6,12 +6,9 @@ library(ggsignif)
 library(data.table)
 rm(list=ls())
 
-current_time <- Sys.time()
-current_time <- gsub(" ", "_", current_time)
-current_time <- gsub(":", "-", current_time)
-
 ## prepare the meta table
-meta_data <- read.csv("all_cancer_type_mutation_group_age_included_20230524_include_somatic_tmb_and_ISAC046_tumor_levels_2023-06-30_18-11-58.csv")
+meta_data <- read.csv2("../../Data/isac1_metadata.csv")
+meta_data$Tumor_Sample_Barcode <- meta_data$NGI_id
 
 ## read the maf files
 
@@ -38,10 +35,11 @@ maf_merge <- subsetMaf(maf_merge, query = "!Variant_Classification %in% need_del
 maf_merge <- subsetMaf(maf_merge, query = "n_depth > 7")
 write.mafSummary(maf_merge, basename = "isac1_filtered_maf")
 
-maf_merge <- read.maf("../Data/isac1_filtered_maf_maftools.maf", verbose = F)
+maf_merge <- read.maf("../../Data/isac1_filtered_maf_maftools.maf", verbose = F)
+source("func/tcgacompare.R")
 
 ##---------- Fig 4a
-isac.mutload = tcgaCompare(maf = new_maf, cohortName = 'ISAC', logscale = TRUE,primarySite = F, capture_size = 35.8, rm_zero = FALSE, medianCol = "#7F3F98",bg_col = c("#EDF8B1", "white"),cohortFontSize = 1, axisFontSize = 1
+isac.mutload = tcgacompare(maf = new_maf, cohortName = 'ISAC', logscale = TRUE,primarySite = F, capture_size = 35.8, rm_zero = FALSE, medianCol = "#7F3F98",bg_col = c("#EDF8B1", "white"),cohortFontSize = 1, axisFontSize = 1
 )
 
 
