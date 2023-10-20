@@ -11,7 +11,7 @@ current_time <- gsub(" ", "_", current_time)
 current_time <- gsub(":", "-", current_time)
 
 ## prepare the meta table
-meta_data <- read.csv("../data/all_cancer_type_mutation_group_age_included_20230524_include_somatic_tmb_and_ISAC046_tumor_levels_2023-06-30_18-11-58.csv")
+meta_data <- read.csv("all_cancer_type_mutation_group_age_included_20230524_include_somatic_tmb_and_ISAC046_tumor_levels_2023-06-30_18-11-58.csv")
 
 ## read the maf files
 folder_path <- "~/maf_vep_pass_subset/"
@@ -30,12 +30,12 @@ need_delete <- c("Intron","5'UTR", "3'UTR","5'Flank", "3'Flank", "IGR", "Silent"
 ## read filtered maf files
 maf_m <- lapply(paste("~/maf_vep_pass_subset/",list.files("~/maf_vep_pass_subset/"), sep = ""), read.maf, clinicalData=meta_data, verbose = FALSE, vc_nonSyn = classification)
 maf_merge <- merge_mafs(maf_m, vc_nonSyn = classification)
-maf_merge <- subsetMaf(maf_merge, query = "!Variant_Classification %in% need_delete")  ## 这个不仅需要，而是是最严的，IGR和Intro也没有
+maf_merge <- subsetMaf(maf_merge, query = "!Variant_Classification %in% need_delete") 
 maf_merge <- subsetMaf(maf_merge, query = "n_depth > 7")
 source("WGS/test2.R")
 
 ##---------- Fig 4a
-isac.mutload = tcgaCompare_test(maf = maf_merge, cohortName = 'ISAC', logscale = TRUE,primarySite = F, capture_size = 35.8, rm_zero = F) ## 这里这个remove zero有时候不起作用，要小心
+isac.mutload = tcgaCompare_test(maf = maf_merge, cohortName = 'ISAC', logscale = TRUE,primarySite = F, capture_size = 35.8, rm_zero = F) 
 
 
 
