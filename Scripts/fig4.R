@@ -15,7 +15,8 @@ meta_data <- read.csv("all_cancer_type_mutation_group_age_included_20230524_incl
 
 ## read the maf files
 
-folder_path <- "~/maf_vep_pass_subset/" ## files in this folder include vcf files got from sarek pipelines, then tranform to maf by vcf2maf tools and filtered by PASS
+folder_path <- "~/maf_vep_pass_subset/" ## files in this folder include vcf files got from sarek pipelines, then filtered by PASS
+                                        ## followed by subset to Agilent Sureselect kit, then tranform to maf by vcf2maf tools
                                         ## the filtered and merged maf files can be found in data folder. Code from line 17 to line 35 just to show the filter process
                                         ## the code for the plot can run from line 38
 file_names <- list.files(folder_path)
