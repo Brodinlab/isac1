@@ -8,7 +8,7 @@ rm(list=ls())
 
 ## prepare the meta table
 meta_data <- read.csv2("../../Data/isac1_metadata.csv")
-meta_data$Tumor_Sample_Barcode <- meta_data$NGI_id
+meta_data$Tumor_Sample_Barcode <- meta_data$PID
 
 ## read the maf files
 
@@ -62,5 +62,3 @@ ggplot(tmb_merge, mapping = aes(x=tumor_level2, y=total_perMB)) + geom_boxplot(f
   xlab("Tumor type") + ylab("TMB (per MB)") +
   labs(color = NULL) +
   scale_y_log10()
-
-ggsave("exom_tmb_distribution_20231018.pdf",height = 8, width = 7.2)

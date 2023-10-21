@@ -8,9 +8,7 @@ tcgacompare <- function (maf, capture_size = NULL, tcga_capture_size = 35.8,
                             package = "maftools")
   tcga.cohort = data.table::fread(file = tcga.cohort, sep = "\t", 
                                   stringsAsFactors = FALSE)
-  #table_age <- read.table("../../Data/age_tcga_cancer_2023-09-05_21-59-01.067349.csv", header = T)
-  table_age <- read.table("~/OneDrive - Karolinska Institutet/personal_files/PhD/Project/ISAC/results/table/age_tcga_cancer_2023-09-05_21-59-01.067349.csv", header = T)
-  
+  table_age <- read.table("../../Data/age_tcga_cancer_2023-09-05_21-59-01.067349.txt", header = T)
   table_age <- table_age[,-1]
   tcga.cohort <- merge(tcga.cohort, table_age, by = "Tumor_Sample_Barcode")
   if (primarySite) {
@@ -88,8 +86,8 @@ tcgacompare <- function (maf, capture_size = NULL, tcga_capture_size = 35.8,
     tcga.cohort[, `:=`(total_perMB, total/tcga_capture_size)]
     
     library(tidyverse)
-    isac_meta <- read.csv2("~/Downloads/isac1_metadata.csv")
-    isac_meta$Tumor_Sample_Barcode <- isac_meta$NGI_id
+    isac_meta <- read.csv2("../../Data/isac1_metadata.csv")
+    isac_meta$Tumor_Sample_Barcode <- isac_meta$PID
     isac_meta <- isac_meta  %>% dplyr::select(Tumor_Sample_Barcode, age_year)
     isac_meta <- na.omit(isac_meta)
     maf.mutload <- merge(maf.mutload, isac_meta, by = "Tumor_Sample_Barcode")
