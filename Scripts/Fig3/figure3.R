@@ -9,19 +9,19 @@ library(ggraph)
 library(ggrepel)
 
 # Read metadata table
-meta <- read.csv2("data/isac1_metadata.csv")
+meta <- read.csv2("Data/isac1_metadata.csv")
 meta %<>% filter(baseline == "yes")
 meta$grid_id <- as.character(meta$grid_id)
 meta$olink_id <- as.character(meta$olink_id)
 
 # Read cell cluster frequency data
-cell <- read.csv("data/isac1_baseline_cell_cluster_freq.csv", row.names = 1, check.names = FALSE)
+cell <- read.csv("Data/isac1_baseline_cell_cluster_freq.csv", row.names = 1, check.names = FALSE)
 
 # Read cell cluster median marker expression data
-marker <- read.table("data/isac1_baseline_cell_cluster_median_marker_expression.txt", sep = "\t", header = TRUE)
+marker <- read.table("Data/isac1_baseline_cell_cluster_median_marker_expression.txt", sep = "\t", header = TRUE)
 
 # Read protein expression data
-protein <- read.csv("data/isac1_baseline_protein_NPX.csv", row.names = 1)
+protein <- read.csv("Data/isac1_baseline_protein_NPX.csv", row.names = 1, check.names = FALSE)
 
 # Check sample order consistency in data and metadata
 identical(rownames(cell), meta$grid_id)
@@ -35,7 +35,8 @@ data <- cell %>%
   filter(tumor_level1 == "Neuroblastoma") %>%
   mutate(group = metastasis) %>%
   select(-tumor_level1, -metastasis) %>%
-  select_if(~!all(is.na(.)))
+  select_if(~!all(is.na(.))) %>%
+  filter(is.na(group) == FALSE)
 
 # For figure 3c: filter patients with medication
 data <- cell %>%
@@ -43,7 +44,8 @@ data <- cell %>%
   filter(medication == "Yes") %>%
   mutate(group = neutropenic_fever) %>%
   select(-medication, -neutropenic_fever) %>%
-  select_if(~!all(is.na(.)))
+  select_if(~!all(is.na(.))) %>%
+  filter(is.na(group) == FALSE)
 
 # Separate two comparison groups
 group1 <- data %>% filter(group == "Yes") %>% select(-group)
@@ -88,7 +90,7 @@ ggraph(l_g) +
   scale_size_continuous(range = c(5, 20)) +
   scale_fill_manual(values = c("Positive" = "#65A479FF", "Negative" = "#D3BA68FF"), name = "Log2 Fold Change") +
   geom_node_text(data = subset(l_g, pvalue < 0.1),
-                 aes(label = cluster), size = 4, color = 'white', show.legend = FALSE, repel = F) +
+                 aes(label = celltype), size = 4, color = 'black', show.legend = FALSE, repel = F) +
   theme_graph(base_family = 'Helvetica') 
 
 #  Figure 3b & 3c -----
@@ -99,7 +101,8 @@ data <- protein %>%
   filter(tumor_level1 == "Neuroblastoma") %>%
   mutate(group = metastasis) %>%
   select(-tumor_level1, -metastasis) %>%
-  select_if(~!all(is.na(.)))
+  select_if(~!all(is.na(.))) %>%
+  filter(is.na(group) == FALSE)
 
 # For figure 3c: filter patients with medication
 data <- protein %>%
@@ -107,7 +110,8 @@ data <- protein %>%
   filter(medication == "Yes") %>%
   mutate(group = neutropenic_fever) %>%
   select(-medication, -neutropenic_fever) %>%
-  select_if(~!all(is.na(.)))
+  select_if(~!all(is.na(.))) %>%
+  filter(is.na(group) == FALSE)
 
 # Separate two comparison groups
 group1 <- data %>% filter(group == "Yes") %>% select(-group)

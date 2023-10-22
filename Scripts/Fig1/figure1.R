@@ -5,10 +5,10 @@ library(tidyverse)
 library(webr)
 
 # Read functions
-source("scripts/PieDonutCustom.R")
+source("Scripts/func/PieDonutCustom.R")
 
 # Read metadata table
-meta <- read.csv2("data/isac1_metadata.csv") %>% filter(is.na(subject_id) == FALSE)
+meta <- read.csv2("Data/isac1_metadata.csv") %>% filter(is.na(subject_id) == FALSE)
 
 # Reorder tumor type levels
 meta$tumor_type_grouped <- factor(meta$tumor_type_grouped, 

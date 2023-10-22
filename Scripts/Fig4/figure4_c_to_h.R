@@ -4,9 +4,10 @@
 library(tidyverse)
 library(magrittr)
 library(ggpubr)
+library(ggfortify)
 
 # Read metadata table
-meta <- read.csv2("data/isac1_metadata.csv")
+meta <- read.csv2("Data/isac1_metadata.csv")
 meta$grid_id <- as.character(meta$grid_id)
 meta$olink_id <- as.character(meta$olink_id)
 
@@ -14,11 +15,11 @@ meta$olink_id <- as.character(meta$olink_id)
 meta %<>% filter(tumor_level1 == "Neuroblastoma" & baseline == "yes" & is.na(PID) == FALSE)
 
 # Read cell composition data
-cell <- read.csv("data/isac1_baseline_cell_subtype_freq.csv", row.names = 1, check.names = FALSE)
+cell <- read.csv("Data/isac1_baseline_cell_subtype_freq.csv", row.names = 1, check.names = FALSE)
 cell <- cell[meta$grid_id,]  %>% select_if(~!all(is.na(.)))
 
 # Read protein expression data
-protein <- read.csv("data/isac1_baseline_protein_NPX.csv", row.names = 1)
+protein <- read.csv("Data/isac1_baseline_protein_NPX.csv", row.names = 1, check.names = FALSE)
 protein <- protein[meta$olink_id,]  %>% select_if(~!all(is.na(.)))
 
 # Check sample order consistency in data and metadata

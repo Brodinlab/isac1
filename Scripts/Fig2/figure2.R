@@ -8,16 +8,16 @@ library(vegan)
 library(pheatmap)
 
 # Read metadata table
-meta <- read.csv2("data/isac1_metadata.csv")
+meta <- read.csv2("Data/isac1_metadata.csv")
 meta %<>% filter(baseline == "yes")
 meta$grid_id <- as.character(meta$grid_id)
 meta$olink_id <- as.character(meta$olink_id)
 
 # Read cell composition data
-cell <- read.csv("data/isac1_baseline_cell_subtype_freq.csv", row.names = 1, check.names = FALSE)
+cell <- read.csv("Data/isac1_baseline_cell_subtype_freq.csv", row.names = 1, check.names = FALSE)
 
 # Read protein expression data
-protein <- read.csv("data/isac1_baseline_protein_NPX.csv", row.names = 1, check.names = FALSE)
+protein <- read.csv("Data/isac1_baseline_protein_NPX.csv", row.names = 1, check.names = FALSE)
 
 # Check sample order consistency in data and metadata
 identical(rownames(cell), meta$grid_id)
@@ -177,7 +177,7 @@ dotplot <- ggplot(dist_df, aes(x = From, y = To, color = -Distance, size = -Dist
         plot.title = element_text(size = 10),
         panel.background = element_blank())
 combined_legend <- guides(
-  color = guide_legend(title = "Distance", override.aes = list(shape = 16)),
-  size = guide_legend(title = "Distance", override.aes = list(shape = 16))
+  color = guide_legend(title = "-Distance", override.aes = list(shape = 16)),
+  size = guide_legend(title = "-Distance", override.aes = list(shape = 16))
 )
 dotplot + combined_legend
