@@ -139,3 +139,4 @@ ggplot(df, aes(x = log2fc, y = -log10(pvalue))) +
   scale_color_manual(values = c("Positive" = "#65A479FF", "Negative" = "#D3BA68FF"), name = "Log2 Fold Change") +
   labs(x = "Log2 Fold Change", y = "-log10(P-Value)") +
   theme(panel.background = element_blank())
+
