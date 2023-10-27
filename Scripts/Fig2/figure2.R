@@ -39,7 +39,8 @@ ggplot(mds_df, aes(x = `1`, y = `2`, color = age_months)) +
   geom_point(size = 3) +
   paletteer::scale_color_paletteer_c("ggthemes::Purple") +
   labs(x = "MDS1", y = "MDS2", title = "MDS of immune cell composition") +
-  theme(panel.background = element_blank()) 
+  theme(text = element_text(color = "black"), panel.background = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
 
 # Figure 2c -----
 
@@ -53,7 +54,8 @@ pca <- prcomp(protein[,colSums(is.na(protein)) == 0], scale. = TRUE) # Remove pr
 # PCA plot
 autoplot(pca, data = meta, color = "age_months", size = 3) +
   paletteer::scale_color_paletteer_c("ggthemes::Purple") +
-  theme(panel.background = element_blank())
+  theme(text = element_text(color = "black"), panel.background = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Figure 2d & 2e -----
 
@@ -119,7 +121,8 @@ permanova %>%
   labs(x = "Batch", y = "Percentage of variance", 
        title = "Variance explained by each factor in each batch") +
   scale_fill_manual(values = paletteer::paletteer_d("fishualize::Chaetodon_sedentarius", direction = -1)) +
-  theme(panel.background = element_blank()) 
+  theme(text = element_text(color = "black"), panel.background = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
 
 # Figure 2f & 2g -----
 
@@ -173,9 +176,9 @@ dotplot <- ggplot(dist_df, aes(x = From, y = To, color = -Distance, size = -Dist
   scale_size_continuous(range = c(1, 15)) +
   scale_y_discrete(position = "right") +
   labs(x = "", y = "", title = "Pairwise distances between tumor types") +
-  theme(axis.text.x = element_text(angle = -45, hjust = 0),
-        plot.title = element_text(size = 10),
-        panel.background = element_blank())
+  theme(axis.text.x = element_text(angle = -45, hjust = 0), text = element_text(color = "black"),
+        plot.title = element_text(size = 10), panel.background = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 combined_legend <- guides(
   color = guide_legend(title = "-Distance", override.aes = list(shape = 16)),
   size = guide_legend(title = "-Distance", override.aes = list(shape = 16))

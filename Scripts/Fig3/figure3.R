@@ -18,7 +18,9 @@ meta$olink_id <- as.character(meta$olink_id)
 cell <- read.csv("Data/isac1_baseline_cell_cluster_freq.csv", row.names = 1, check.names = FALSE)
 
 # Read cell cluster median marker expression data
-marker <- read.table("Data/isac1_baseline_cell_cluster_median_marker_expression.txt", sep = "\t", header = TRUE)
+marker <- read.csv("Data/isac1_baseline_cell_cluster_median_marker_expression.csv", row.names = 1, check.names = FALSE)
+# Z-score transformation of marker expression values
+marker <- cbind(scale(marker[,1:32], center = TRUE, scale = TRUE), marker[,33:38])
 
 # Read protein expression data
 protein <- read.csv("Data/isac1_baseline_protein_NPX.csv", row.names = 1, check.names = FALSE)
@@ -66,7 +68,7 @@ df <- data.frame(
 
 # Build force-directed graph from cell cluster median marker expression
 marker_df <- marker %>% mutate(feature = celltype) %>% left_join(df)
-set.seed(824)
+set.seed(224)
 G <- build_graph(marker_df, col.names = colnames(marker_df)[1:32], filtering_T = 5)
 for(i in names(marker_df)){
   G <- set.vertex.attribute(G, name = i, value = marker_df[, i])
@@ -77,23 +79,21 @@ V(G)$type <- "cluster"
 V(G)$Label <- paste("c", V(G)$cellType, sep = "")
 
 # Visualize force-directed graph
-set.seed(824)
 l_g <- create_layout(G, layout="fr")
 l_g$x <- V(G)$x
 l_g$y <- V(G)$y
 ggraph(l_g) +
   geom_edge_link(alpha = .1, check_overlap = F) + 
   geom_node_point(aes(size = percentage), fill = "grey", shape = 21,  alpha = 1) +
-  geom_node_point(data = subset(l_g, pvalue < 0.1), 
+  geom_node_point(data = subset(l_g, pvalue < 0.05), 
                   aes(size = percentage, fill = ifelse(log2fc > 0, "Positive", "Negative")), 
                   shape = 21,  alpha = 1) +
   scale_size_continuous(range = c(5, 20)) +
   scale_fill_manual(values = c("Positive" = "#65A479FF", "Negative" = "#D3BA68FF"), name = "Log2 Fold Change") +
-  geom_node_text(data = subset(l_g, pvalue < 0.1),
-                 aes(label = celltype), size = 4, color = 'black', show.legend = FALSE, repel = F) +
+  geom_node_text(data = subset(l_g, pvalue < 0.05), aes(label = celltype), show.legend = FALSE, repel = TRUE) +
   theme_graph(base_family = 'Helvetica') 
 
-#  Figure 3b & 3c -----
+#  Figure 3b & 3d -----
 
 # For figure 3b: filter neuroblastoma patients
 data <- protein %>%
@@ -104,7 +104,7 @@ data <- protein %>%
   select_if(~!all(is.na(.))) %>%
   filter(is.na(group) == FALSE)
 
-# For figure 3c: filter patients with medication
+# For figure 3d: filter patients with medication
 data <- protein %>%
   cbind(select(meta, medication, neutropenic_fever)) %>%
   filter(medication == "Yes") %>%
@@ -133,10 +133,12 @@ df <- data.frame(
 # Volcano plot
 ggplot(df, aes(x = log2fc, y = -log10(pvalue))) +
   geom_point(aes(color = ifelse(log2fc > 0, "Positive", "Negative")), size = 2) +
-  geom_text_repel(data = subset(df, pvalue < 0.5), aes(label = feature)) + 
+  #geom_text_repel(data = subset(df, pvalue < 0.5), aes(label = feature)) + 
+  ggrepel::geom_text_repel(data = subset(df, pvalue < 0.5), aes(label = feature, color = ifelse(log2fc > 0, "Positive", "Negative")), 
+                           box.padding = 0.5, show.legend = FALSE, max.overlaps = 100) +
   geom_vline(xintercept = 0, linetype = "dotted") +
   geom_hline(yintercept = -log10(0.05), linetype = "dotted") +
   scale_color_manual(values = c("Positive" = "#65A479FF", "Negative" = "#D3BA68FF"), name = "Log2 Fold Change") +
   labs(x = "Log2 Fold Change", y = "-log10(P-Value)") +
-  theme(panel.background = element_blank())
-
+  theme(text = element_text(color = "black"), panel.background = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())

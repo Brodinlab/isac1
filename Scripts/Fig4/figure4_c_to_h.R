@@ -37,7 +37,8 @@ cell %>%
   geom_point() +
   geom_text(aes(label = study_id)) +
   scale_fill_manual(values = c("#D5695DFF", "#5D8CA8FF")) +
-  theme(panel.background = element_blank())
+  theme(text = element_text(color = "black"), panel.background = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
   
 # Figure 4f -----
 protein %>%
@@ -57,7 +58,8 @@ protein %>%
   geom_point(aes(color = ifelse(log2fc > 0, "Positive", "Negative")), size = 4, shape = 21, fill = "white", show.legend = FALSE) +
   scale_color_manual(values = c("Positive" = "brown", "Negative" = "#D3BA68FF")) +
   labs(x = "Log2fc(high mutation/low mutation)", y = "Proteins") +
-  theme(panel.background = element_blank())
+  theme(text = element_text(color = "black"), panel.background = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Figure 4g -----
 cell %>%
@@ -77,7 +79,8 @@ cell %>%
   geom_point(aes(color = ifelse(log2fc > 0, "Positive", "Negative")), size = 4, shape = 21, fill = "white", show.legend = FALSE) +
   scale_color_manual(values = c("Positive" = "brown", "Negative" = "#D3BA68FF")) +
   labs(x = "Log2fc(ROS/non-ROS)", y = "Proteins") +
-  theme(panel.background = element_blank())
+  theme(text = element_text(color = "black"), panel.background = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Figure 4h -----
 
@@ -97,5 +100,6 @@ pca_res <- prcomp(protein, scale. = TRUE)
 autoplot(pca_res, data = meta, color = "ros", size = 5, loadings = TRUE, loadings.color = "lightgrey",
          loadings.label = 1, loadings.label.size = 2, loadings.label.color = "#0C2340FF", loadings.label.repel = TRUE) +
   scale_color_manual(values = c("#FFA400FF","#2C5234FF")) +
-  theme(panel.background = element_blank()) +
-  labs(title = "PCA of Olink data of Neuroblastoma patients: ROS vs. non-ROS")
+  labs(title = "PCA of Olink data of Neuroblastoma patients: ROS vs. non-ROS") +
+  theme(text = element_text(color = "black"), panel.background = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
